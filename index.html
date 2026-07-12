@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Min 的角色檔案室：角色介紹、系列分類與更新紀錄。">
+  <title>Character Archive｜角色檔案室</title>
+  <link rel="icon" type="image/png" href="assets/images/min-logo-favicon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-progress" id="page-progress" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="回到首頁">
+      <span class="brand-mark"><img src="assets/images/min-logo.png" alt="Min"></span>
+      <span>
+        <strong>Character Archive</strong>
+        <small>角色檔案室</small>
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="主要導覽">
+      <a href="#characters">角色</a>
+      <a href="#about">關於</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">MIN'S CHARACTER COLLECTION</p>
+        <h1 id="hero-title">讓每一位角色，<br>都有自己的入口。</h1>
+        <p class="hero-intro">這裡收錄角色設定、所屬系列、功能定位與更新狀態。第一版先測試資訊層級與跨裝置瀏覽。</p>
+        <a class="primary-link" href="#characters">瀏覽角色 <span aria-hidden="true">↓</span></a>
+      </div>
+      <dl class="hero-stats" aria-label="檔案室統計">
+        <div><dt id="character-count">0</dt><dd>收錄角色</dd></div>
+        <div><dt id="series-count">0</dt><dd>角色分類</dd></div>
+      </dl>
+    </section>
+
+    <section class="archive-section" id="characters" aria-labelledby="characters-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">ARCHIVE INDEX</p>
+          <h2 id="characters-title">角色一覽</h2>
+        </div>
+        <label class="search-box">
+          <span class="sr-only">搜尋角色</span>
+          <input id="search-input" type="search" placeholder="搜尋姓名、關鍵字……" autocomplete="off">
+        </label>
+      </div>
+
+      <div class="filter-row" id="filter-row" aria-label="角色分類篩選"></div>
+      <p class="result-note" id="result-note" aria-live="polite"></p>
+      <div class="character-grid" id="character-grid"></div>
+    </section>
+
+    <section class="about-section" id="about" aria-labelledby="about-title">
+      <p class="eyebrow">ABOUT THE ARCHIVE</p>
+      <div>
+        <h2 id="about-title">角色檔案室</h2>
+        <p class="about-lead">收錄 Min 創作的角色、功能與公開入口。</p>
+      </div>
+      <div class="about-copy">
+        <p>每一份檔案記錄角色的定位、主要功能與目前狀態，方便快速認識並前往使用。新角色與更新內容將陸續公開。</p>
+        <a
+          class="author-link"
+          href="https://www.threads.com/@mmmminminmmm_?xmt=AQGzBVnPorEycHihc9RIhCCE4M3Mz4lZAfEUcR2oWgdwsZA"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>
+            <small>角色作者 Threads</small>
+            <strong>@mmmminminmmm_</strong>
+          </span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Character Archive · Characters by Min</p>
+    <div class="footer-links">
+      <a
+        href="https://www.threads.com/@mmmminminmmm_?xmt=AQGzBVnPorEycHihc9RIhCCE4M3Mz4lZAfEUcR2oWgdwsZA"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Threads ↗</a>
+      <a href="#top">回到頂端 ↑</a>
+    </div>
+  </footer>
+
+  <dialog class="character-dialog" id="character-dialog" aria-labelledby="dialog-name">
+    <div class="dialog-layout">
+      <div class="dialog-portrait" id="dialog-portrait">
+        <img id="dialog-image" src="" alt="">
+      </div>
+
+      <div class="dialog-content">
+        <button class="dialog-close" id="dialog-close" type="button" aria-label="關閉角色詳情">×</button>
+
+        <div class="dialog-copy">
+          <p class="dialog-category" id="dialog-category"></p>
+          <h2 id="dialog-name"></h2>
+          <p class="dialog-role" id="dialog-role"></p>
+          <blockquote class="dialog-voice" id="dialog-voice"></blockquote>
+          <p class="dialog-description" id="dialog-description"></p>
+          <div class="tag-list" id="dialog-tags"></div>
+
+          <section class="dialog-features" id="dialog-features" aria-labelledby="dialog-features-title">
+            <h3 id="dialog-features-title">主要功能</h3>
+            <ul id="dialog-feature-list"></ul>
+          </section>
+
+          <div class="dialog-actions" id="dialog-actions"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
