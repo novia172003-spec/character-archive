@@ -7,6 +7,7 @@
   <title>Character Archive｜角色檔案室</title>
   <link rel="icon" type="image/png" href="assets/images/min-logo-favicon.png">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="redesign.css">
 </head>
 <body>
   <div class="page-progress" id="page-progress" aria-hidden="true"></div>
@@ -27,15 +28,20 @@
   <main id="top">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow">MIN'S CHARACTER COLLECTION</p>
+        <p class="eyebrow">MIN'S CHARACTER COLLECTION / OPEN ARCHIVE</p>
         <h1 id="hero-title">讓每一位角色，<br>都有自己的入口。</h1>
-        <p class="hero-intro">這裡收錄角色設定、所屬系列、功能定位與更新狀態，讓每一位角色都能被認識與使用。</p>
-        <a class="primary-link" href="#characters">瀏覽角色 <span aria-hidden="true">↓</span></a>
+        <p class="hero-intro">這裡收錄角色設定、<wbr>所屬系列、<wbr>功能定位與更新狀態，<wbr>讓每一位角色都能被認識與使用。</p>
+        <a class="primary-link" href="#characters">
+          瀏覽角色
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg>
+        </a>
       </div>
-      <dl class="hero-stats" aria-label="檔案室統計">
-        <div><dt id="character-count">0</dt><dd>收錄角色</dd></div>
-        <div><dt id="series-count">0</dt><dd>角色分類</dd></div>
-      </dl>
+      <div class="hero-side">
+        <dl class="hero-stats" aria-label="檔案室統計">
+          <div><dt id="character-count">0</dt><dd>收錄角色</dd></div>
+          <div><dt id="series-count">0</dt><dd>角色分類</dd></div>
+        </dl>
+      </div>
     </section>
 
     <section class="archive-section" id="characters" aria-labelledby="characters-title">
@@ -52,6 +58,7 @@
 
       <div class="filter-row" id="filter-row" aria-label="角色分類篩選"></div>
       <p class="result-note" id="result-note" aria-live="polite"></p>
+      <div class="scroll-archive" id="scroll-archive"></div>
       <div class="character-grid" id="character-grid"></div>
     </section>
 
@@ -73,21 +80,21 @@
             <small>角色作者 Threads</small>
             <strong>@mmmminminmmm_</strong>
           </span>
-          <span aria-hidden="true">↗</span>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
         </a>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>Character Archive · Characters by Min</p>
+    <p>Character Archive / Characters by Min</p>
     <div class="footer-links">
       <a
         href="https://www.threads.com/@mmmminminmmm_?xmt=AQGzBVnPorEycHihc9RIhCCE4M3Mz4lZAfEUcR2oWgdwsZA"
         target="_blank"
         rel="noopener noreferrer"
-      >Threads ↗</a>
-      <a href="#top">回到頂端 ↑</a>
+      >Threads <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      <a href="#top">回到頂端 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a>
     </div>
   </footer>
 
@@ -98,16 +105,31 @@
       </div>
 
       <div class="dialog-content">
-        <button class="dialog-close" id="dialog-close" type="button" aria-label="關閉角色詳情">×</button>
+        <button class="dialog-close" id="dialog-close" type="button" aria-label="關閉角色詳情">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
 
         <div class="dialog-copy">
           <p class="dialog-category" id="dialog-category"></p>
           <h2 id="dialog-name"></h2>
           <p class="dialog-role" id="dialog-role"></p>
+          <dl class="profile-facts" aria-label="角色基本資料">
+            <div><dt>AGE</dt><dd id="dialog-age"></dd></div>
+            <div><dt>HEIGHT</dt><dd id="dialog-height"></dd></div>
+            <div><dt>OCCUPATION</dt><dd id="dialog-occupation"></dd></div>
+            <div><dt>TYPE</dt><dd id="dialog-profile-type"></dd></div>
+          </dl>
+          <div class="tag-list dialog-function-tags" id="dialog-tags" aria-label="功能標籤"></div>
           <blockquote class="dialog-voice" id="dialog-voice"></blockquote>
           <p class="dialog-description" id="dialog-description"></p>
-          <div class="tag-list" id="dialog-tags"></div>
-
+          <section class="profile-section" aria-labelledby="dialog-background-title">
+            <h3 id="dialog-background-title">角色背景</h3>
+            <p id="dialog-background"></p>
+          </section>
+          <section class="profile-section" aria-labelledby="dialog-interaction-title">
+            <h3 id="dialog-interaction-title">互動定位</h3>
+            <p id="dialog-interaction"></p>
+          </section>
           <section class="dialog-features" id="dialog-features" aria-labelledby="dialog-features-title">
             <h3 id="dialog-features-title">主要功能</h3>
             <ul id="dialog-feature-list"></ul>
