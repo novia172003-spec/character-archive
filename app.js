@@ -141,7 +141,7 @@ const characters = [
     features: [],
     status: "待發佈",
     image: "assets/images/jiang-huaiyu.webp",
-    imageAlt: "黑髮的江淮宇身處書架與綠植間，在日光下注視前方。",
+    imageAlt: "黑髮的江淮宇在書架與綠植之間，微微靠近鏡頭。",
     cardPosition: "50% 30%",
     dialogPosition: "50% 30%",
     cardScale: 1,
@@ -159,6 +159,9 @@ const searchInput = document.querySelector("#search-input");
 const resultNote = document.querySelector("#result-note");
 const characterCount = document.querySelector("#character-count");
 const seriesCount = document.querySelector("#series-count");
+const themeToggle = document.querySelector("#theme-toggle");
+const themeToggleLabel = themeToggle?.querySelector(".theme-toggle-label");
+const themeColor = document.querySelector("#theme-color");
 
 const dialog = document.querySelector("#character-dialog");
 const dialogClose = document.querySelector("#dialog-close");
@@ -181,6 +184,50 @@ const dialogActions = document.querySelector("#dialog-actions");
 
 let activeCategory = "全部";
 let revealObserver;
+
+const themeStorageKey = "character-archive-theme";
+const themeSequence = ["auto", "light", "dark"];
+const themeLabels = {
+  auto: "自動",
+  light: "淺色",
+  dark: "深色"
+};
+const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+function resolveTheme(preference) {
+  return preference === "auto" ? (systemTheme.matches ? "dark" : "light") : preference;
+}
+
+function applyTheme(preference, persist = true) {
+  const safePreference = themeSequence.includes(preference) ? preference : "auto";
+  const resolvedTheme = resolveTheme(safePreference);
+  const nextPreference = themeSequence[(themeSequence.indexOf(safePreference) + 1) % themeSequence.length];
+
+  document.documentElement.dataset.themePreference = safePreference;
+  document.documentElement.dataset.theme = resolvedTheme;
+  document.documentElement.classList.add("theme-ready");
+
+  if (themeToggle && themeToggleLabel) {
+    themeToggleLabel.textContent = themeLabels[safePreference];
+    themeToggle.title = `外觀：${themeLabels[safePreference]}`;
+    themeToggle.setAttribute(
+      "aria-label",
+      `目前為${themeLabels[safePreference]}模式，按一下切換成${themeLabels[nextPreference]}模式`
+    );
+  }
+
+  if (themeColor) {
+    themeColor.content = resolvedTheme === "dark" ? "#151514" : "#f0efec";
+  }
+
+  if (persist) {
+    try {
+      localStorage.setItem(themeStorageKey, safePreference);
+    } catch (error) {
+      // The selected mode still works for this visit when storage is unavailable.
+    }
+  }
+}
 
 const icons = {
   arrowRight: '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>',
@@ -698,6 +745,24 @@ scrollArchive.addEventListener("click", (event) => {
 searchInput.addEventListener("input", renderCharacters);
 dialogClose.addEventListener("click", () => dialog.close());
 
+themeToggle?.addEventListener("click", () => {
+  const currentPreference = document.documentElement.dataset.themePreference || "auto";
+  const nextPreference = themeSequence[(themeSequence.indexOf(currentPreference) + 1) % themeSequence.length];
+  applyTheme(nextPreference);
+});
+
+const handleSystemThemeChange = () => {
+  if (document.documentElement.dataset.themePreference === "auto") {
+    applyTheme("auto", false);
+  }
+};
+
+if (typeof systemTheme.addEventListener === "function") {
+  systemTheme.addEventListener("change", handleSystemThemeChange);
+} else {
+  systemTheme.addListener(handleSystemThemeChange);
+}
+
 dialog.addEventListener("click", (event) => {
   if (event.target === dialog) dialog.close();
 });
@@ -711,6 +776,7 @@ document.querySelectorAll(".hero, .section-heading, .filter-row, .about-section"
   element.style.setProperty("--reveal-delay", `${index * 70}ms`);
 });
 
+applyTheme(document.documentElement.dataset.themePreference || "auto", false);
 renderFilters();
 renderCharacters();
 observeRevealElements();

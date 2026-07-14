@@ -4,8 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Min 的角色檔案室：角色介紹、系列分類與更新紀錄。">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" id="theme-color" content="#f0efec">
   <title>Character Archive｜角色檔案室</title>
   <link rel="icon" type="image/png" href="assets/images/min-logo-favicon.png">
+  <script>
+    (() => {
+      const key = "character-archive-theme";
+      let preference = "auto";
+      try {
+        const saved = localStorage.getItem(key);
+        if (["auto", "light", "dark"].includes(saved)) preference = saved;
+      } catch (error) {
+        preference = "auto";
+      }
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const resolved = preference === "auto" ? (systemDark ? "dark" : "light") : preference;
+      document.documentElement.dataset.theme = resolved;
+      document.documentElement.dataset.themePreference = preference;
+    })();
+  </script>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="redesign.css">
 </head>
@@ -19,10 +37,22 @@
         <small>角色檔案室</small>
       </span>
     </a>
-    <nav class="site-nav" aria-label="主要導覽">
-      <a href="#characters">角色</a>
-      <a href="#about">關於</a>
-    </nav>
+    <div class="header-tools">
+      <nav class="site-nav" aria-label="主要導覽">
+        <a href="#characters">角色</a>
+        <a href="#about">關於</a>
+      </nav>
+      <button
+        class="theme-toggle"
+        id="theme-toggle"
+        type="button"
+        aria-label="目前跟隨系統外觀，按一下切換成淺色模式"
+        title="外觀：跟隨系統"
+      >
+        <span class="theme-toggle-mark" aria-hidden="true"></span>
+        <span class="theme-toggle-label">自動</span>
+      </button>
+    </div>
   </header>
 
   <main id="top">
@@ -66,21 +96,20 @@
       <p class="eyebrow">ABOUT THE ARCHIVE</p>
       <div>
         <h2 id="about-title">角色檔案室</h2>
-        <p class="about-lead">收錄 Min 創作的角色、功能與公開入口。</p>
+        <p class="about-lead">收錄 Min 創作的互動角色與公開入口。</p>
       </div>
       <div class="about-copy">
-        <p>每一份檔案記錄角色的定位、主要功能與目前狀態，方便快速認識並前往使用。新角色與更新內容將陸續公開。</p>
         <a
           class="author-link"
           href="https://www.threads.com/@mmmminminmmm_?xmt=AQGzBVnPorEycHihc9RIhCCE4M3Mz4lZAfEUcR2oWgdwsZA"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span>
-            <small>角色作者 Threads</small>
-            <strong>@mmmminminmmm_</strong>
+          <span class="threads-icon" aria-hidden="true">
+            <img class="threads-icon-light" src="assets/images/threads-black.webp" alt="">
+            <img class="threads-icon-dark" src="assets/images/threads-white.webp" alt="">
           </span>
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          <span>@mmmminminmmm_</span>
         </a>
       </div>
     </section>
@@ -93,7 +122,13 @@
         href="https://www.threads.com/@mmmminminmmm_?xmt=AQGzBVnPorEycHihc9RIhCCE4M3Mz4lZAfEUcR2oWgdwsZA"
         target="_blank"
         rel="noopener noreferrer"
-      >Threads <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      >
+        <span class="threads-icon footer-threads-icon" aria-hidden="true">
+          <img class="threads-icon-light" src="assets/images/threads-black.webp" alt="">
+          <img class="threads-icon-dark" src="assets/images/threads-white.webp" alt="">
+        </span>
+        <span>Threads</span>
+      </a>
       <a href="#top">回到頂端 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a>
     </div>
   </footer>
