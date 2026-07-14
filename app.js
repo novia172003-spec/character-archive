@@ -44,7 +44,7 @@ const characters = [
     id: "sean",
     name: "思承 Sean",
     initial: "S",
-    category: "編輯部",
+    category: "出版社",
     role: "出版社文學線編輯",
     age: "26 歲",
     height: "185 cm",
@@ -77,6 +77,47 @@ const characters = [
         label: "立即使用思承",
         shortLabel: "立即使用",
         url: "https://chatgpt.com/g/g-6a4f6489e0948191bef98bc02ffa687b-bian-ji-bu-si-cheng",
+        external: true
+      }
+    ]
+  },
+  {
+    id: "lynn",
+    name: "黎野 Lynn",
+    initial: "L",
+    category: "出版社",
+    role: "出版社設計部美編實習生",
+    age: "22 歲",
+    height: "179 cm",
+    occupation: "出版社設計部美編實習生",
+    profileType: "設計型角色",
+    personality: ["敏銳", "務實", "嘴硬", "細緻", "有耐心"],
+    voice: "……每次都說是 final。說吧，又要改哪？",
+    description: "解析參考圖、整理 PixAI Prompt，並協助維持角色形象與生成結果的一致性。",
+    background: "黎野是出版社設計部的美編實習生，白天處理角色形象、書封與社群視覺，晚上則和各種永遠不會 final 的修改共處。他熟悉 PixAI 的 XL、SDXL 與 DiT 模型，習慣先拆解參考圖，再把人物、場景、光線、鏡頭與參數整理成可重複使用的視覺系統。",
+    interaction: "把參考圖、角色設定或生成失敗的圖片交給他。他會先確認模型與比例，解析人物和畫面結構，再提供 Prompt、Negative Prompt、LoRA 與參數建議，或針對真正出問題的部分進行診斷。",
+    tags: ["PixAI Prompt", "參考圖解析", "角色一致性", "生成診斷"],
+    features: [
+      "解析人物特徵、畫風、構圖、光線與保留元素",
+      "依 XL、SDXL 或 DiT 重整 Prompt 與 Negative Prompt",
+      "建議 LoRA、權重、Seed、Steps、CFG 與 Sampler",
+      "建立固定人設、視覺 DNA、場景、動作與表情模組",
+      "診斷生成結果，區分不像與不好看並局部修正"
+    ],
+    status: "",
+    image: "assets/images/lynn.jpg",
+    imageAlt: "灰紫髮的黎野坐在設計工作桌前，手持觸控筆，身後螢幕顯示視覺稿件。",
+    cardPosition: "50% 30%",
+    dialogPosition: "50% 30%",
+    cardScale: 1,
+    dialogScale: 1,
+    tones: ["#e5e0e8", "#b4a7bc"],
+    accent: "#7b6882",
+    links: [
+      {
+        label: "立即使用黎野",
+        shortLabel: "立即使用",
+        url: "https://chatgpt.com/g/g-6a562a6a15f48191ad0330380070f191-she-ji-bu-li-ye",
         external: true
       }
     ]
