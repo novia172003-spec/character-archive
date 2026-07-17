@@ -644,12 +644,66 @@ html[data-theme="dark"] .dialog-function-tags .tag {
   font-size: 11px;
 }
 
+.showcase-mode-switch {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.showcase-mode-button {
+  position: relative;
+  min-height: 27px;
+  padding: 0 0 7px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 9px;
+  letter-spacing: .06em;
+  cursor: pointer;
+}
+
+.showcase-mode-button::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--character-accent);
+  content: "";
+  opacity: 0;
+  transform: scaleX(.35);
+  transform-origin: left;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.showcase-mode-button:hover,
+.showcase-mode-button:focus-visible,
+.showcase-mode-button.is-active {
+  color: color-mix(in srgb, var(--character-accent) 68%, var(--ink));
+}
+
+.showcase-mode-button:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+.showcase-mode-button.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
 .showcase-copy blockquote {
   max-width: 31em;
   margin: 46px 0 38px;
   font-size: clamp(16px, 1.5vw, 21px);
   font-weight: 500;
   line-height: 1.65;
+}
+
+.showcase-mode-switch + blockquote {
+  margin-top: 28px;
 }
 
 .showcase-facts {
@@ -709,6 +763,97 @@ html[data-theme="dark"] .dialog-function-tags .tag {
 
 .showcase-actions button:hover,
 .showcase-actions a:hover {
+  color: var(--muted);
+}
+
+.showcase-platform-picker {
+  position: relative;
+}
+
+.showcase-platform-picker summary {
+  display: inline-flex;
+  min-height: 29px;
+  align-items: center;
+  padding: 0;
+  border-bottom: 1px solid currentColor;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 600;
+  list-style: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.showcase-platform-picker summary::-webkit-details-marker {
+  display: none;
+}
+
+.showcase-platform-picker summary:hover,
+.showcase-platform-picker summary:focus-visible,
+.showcase-platform-picker[open] summary {
+  color: var(--muted);
+}
+
+.showcase-platform-picker summary:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+.showcase-platform-menu {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 0;
+  z-index: 3;
+  width: 248px;
+  padding: 4px 14px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 0 18px 42px rgba(var(--shadow-rgb), .12);
+}
+
+.showcase-platform-item,
+.showcase-actions .showcase-platform-item {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.showcase-platform-item:last-child {
+  border-bottom: 0;
+}
+
+.showcase-actions a.showcase-platform-item:hover,
+.showcase-actions a.showcase-platform-item:focus-visible {
+  color: var(--character-accent);
+}
+
+.showcase-platform-item small {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.showcase-platform-item small .icon {
+  width: 10px;
+  height: 10px;
+}
+
+.showcase-platform-item.is-upcoming {
   color: var(--muted);
 }
 
@@ -1325,10 +1470,25 @@ html[data-theme="dark"] .card-portrait {
     margin-top: 7px;
   }
 
+  .showcase-mode-switch {
+    gap: 22px;
+    margin-top: 9px;
+  }
+
+  .showcase-mode-button {
+    min-height: 23px;
+    padding-bottom: 5px;
+    font-size: 8px;
+  }
+
   .showcase-copy blockquote {
     margin: 14px 0 12px;
     font-size: 13px;
     line-height: 1.55;
+  }
+
+  .showcase-mode-switch + blockquote {
+    margin-top: 9px;
   }
 
   .showcase-facts {
@@ -1339,6 +1499,12 @@ html[data-theme="dark"] .card-portrait {
     gap: 28px;
     margin-top: auto;
     padding-bottom: 3px;
+  }
+
+  .showcase-platform-menu {
+    right: auto;
+    left: 0;
+    width: min(248px, calc(100vw - 52px));
   }
 
   .showcase-thumbs {
@@ -1453,6 +1619,14 @@ html[data-theme="dark"] .card-portrait {
     font-size: 12px;
   }
 
+  .showcase-mode-switch {
+    margin-top: 6px;
+  }
+
+  .showcase-mode-switch + blockquote {
+    margin-top: 6px;
+  }
+
   .showcase-thumb {
     width: 46px;
     flex-basis: 46px;
@@ -1467,6 +1641,8 @@ html[data-theme="dark"] .card-portrait {
   .showcase-portrait,
   .showcase-copy,
   .showcase-thumb,
+  .showcase-mode-button::after,
+  .showcase-platform-picker,
   .showcase-portrait img {
     transition: none;
   }
@@ -1483,5 +1659,131 @@ html[data-theme="dark"] .card-portrait {
   html.theme-ready .character-card,
   html.theme-ready .demo-card {
     transition: none;
+  }
+}
+
+/* Scalable platform index inside character details */
+.dialog-actions {
+  display: block;
+  margin-top: 42px;
+  border-top: 1px solid var(--line);
+}
+
+.dialog-actions-title {
+  margin: 0;
+  padding: 14px 0 10px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+
+.dialog-mode-switch {
+  display: flex;
+  gap: 24px;
+  margin: 24px 0 32px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dialog-mode-switch[hidden] {
+  display: none;
+}
+
+.dialog-mode-button {
+  position: relative;
+  min-height: 34px;
+  padding: 0 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+
+.dialog-mode-button::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: var(--dialog-accent);
+  content: "";
+  opacity: 0;
+  transform: scaleX(.4);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.dialog-mode-button:hover,
+.dialog-mode-button:focus-visible,
+.dialog-mode-button.is-active {
+  color: var(--ink);
+}
+
+.dialog-mode-button.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.dialog-platform-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
+}
+
+.dialog-platform-list .dialog-link {
+  display: flex;
+  min-width: 0;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.dialog-platform-list a.dialog-link:hover,
+.dialog-platform-list a.dialog-link:focus-visible {
+  color: var(--dialog-accent);
+}
+
+.dialog-platform-list .dialog-link-main {
+  overflow: hidden;
+  font-size: 10px;
+  letter-spacing: .015em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dialog-platform-list .dialog-link .icon {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+}
+
+.dialog-platform-list .is-upcoming {
+  color: var(--muted);
+  cursor: default;
+}
+
+.dialog-link-status {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: .1em;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .dialog-actions {
+    margin-top: 34px;
+  }
+
+  .dialog-platform-list {
+    grid-template-columns: 1fr;
   }
 }

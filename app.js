@@ -118,10 +118,53 @@ const characters = [
     accent: "#7b6882",
     links: [
       {
-        label: "立即使用黎野",
-        shortLabel: "立即使用",
+        label: "ChatGPT · 設計協作",
+        shortLabel: "設計協作",
         url: "https://chatgpt.com/g/g-6a562a6a15f48191ad0330380070f191-she-ji-bu-li-ye",
         external: true
+      }
+    ],
+    modes: [
+      {
+        id: "work",
+        label: "設計協作"
+      },
+      {
+        id: "story",
+        label: "故事互動",
+        role: "當代臺灣｜交友軟體相遇",
+        profileType: "故事互動角色",
+        voice: "我以為這只是朋友會做的事。",
+        description: "看似很會談戀愛，實際是母胎單身；總在心動已成習慣後，才慢半拍察覺自己的在意。",
+        background: "黎野是 22 歲的臺灣出版社設計部美編實習生。灰紫色狼尾髮與穿孔讓人誤以為他很懂戀愛，實際卻是母胎單身。他不擅長辨認曖昧，也常把真正聊得來的人相處成朋友。在朋友慫恿下下載交友軟體，原本只想證明自己不適合，直到配對到你。",
+        interactionTitle: "故事開端",
+        interaction: "從交友軟體配對開始，聊工作、設計、書籍、電影與日常。他的好感不靠突然告白，而會在等待訊息、記住小事、分享生活與笨拙試探中慢慢累積。",
+        tagsLabel: "故事標籤",
+        tags: ["交友軟體", "母胎單身", "慢熱心動", "當代臺灣"],
+        featuresTitle: "互動片段",
+        features: [
+          "看到你可能喜歡的設計、電影或展覽時，會傳來一句：「這個妳應該會喜歡。」",
+          "說完晚安後，又用一張圖片或一句工作抱怨，把快結束的對話重新接起來。",
+          "記得你提過的喜好與小事，被發現時只會說：「我只是剛好看到。」",
+          "聽見你提起其他曖昧對象時會安靜一下，再若無其事地問：「妳跟他很熟？」",
+          "想見面時故意說得像順便：「剛好附近有展。要不要去？」"
+        ],
+        links: [
+          {
+            label: "Floze · 故事互動",
+            shortLabel: "進入故事",
+            url: "https://s.floze.ai/r/dj4eEFbnYq5Hq2N6K3b7Re0iP?locale=tw",
+            external: true
+          },
+          {
+            label: "Heartbeat · 故事互動",
+            status: "coming-soon"
+          },
+          {
+            label: "ChatGPT · 故事互動",
+            status: "coming-soon"
+          }
+        ]
       }
     ]
   },
@@ -137,11 +180,19 @@ const characters = [
     profileType: "敘事角色",
     personality: ["溫和", "知性", "慢熱", "細膩", "帶土地感"],
     voice: "如果你願意，我想帶你從一條老街開始，慢慢認識這片土地。",
-    description: "江淮宇的完整角色資料與公開入口將於後續正式發佈。",
+    description: "在地方檔案、田野訪談與老街日常之間工作；話不多，總能從被忽略的細節裡找回一段地方記憶。",
     background: "江淮宇長期投入地方創生與文史保存，在老街、地方檔案與田野訪談之間工作。他有乾淨安靜的書卷氣，也熟悉土地留下的細節。故事以共同工作與日常陪伴為起點，讓關係在地方事件中緩慢累積。",
+    interactionTitle: "故事開端",
     interaction: "使用者將以自訂角色進入故事，透過工作合作、田野調查、地方活動與日常相處認識他，逐步發展自然、慢熱的關係。",
+    tagsLabel: "故事標籤",
     tags: ["田野調查", "地方文史", "慢熱互動"],
-    features: [],
+    featuresTitle: "互動片段",
+    features: [
+      "走進老街時，他會放慢腳步，指給你看門楣、地名與建築留下的線索。",
+      "田野訪談結束後，他把熱茶推到你面前，問你今天記住了哪一段故事。",
+      "你抱著器材跟不上時，他會自然接過一半，只說：「慢慢來，不趕時間。」",
+      "地方活動散場後，他陪你沿著老街走回去，把白天沒說完的事接著聊完。"
+    ],
     status: "待發佈",
     image: "assets/images/jiang-huaiyu.webp?v=20260717-motion-set",
     motionVideo: "assets/video/jiang-huaiyu-hover.mp4?v=20260717-motion-set",
@@ -173,22 +224,28 @@ const dialogImage = document.querySelector("#dialog-image");
 const dialogCategory = document.querySelector("#dialog-category");
 const dialogName = document.querySelector("#dialog-name");
 const dialogRole = document.querySelector("#dialog-role");
+const dialogModeSwitch = document.querySelector("#dialog-mode-switch");
 const dialogAge = document.querySelector("#dialog-age");
 const dialogHeight = document.querySelector("#dialog-height");
 const dialogOccupation = document.querySelector("#dialog-occupation");
 const dialogProfileType = document.querySelector("#dialog-profile-type");
+const dialogBackgroundTitle = document.querySelector("#dialog-background-title");
 const dialogBackground = document.querySelector("#dialog-background");
+const dialogInteractionTitle = document.querySelector("#dialog-interaction-title");
 const dialogInteraction = document.querySelector("#dialog-interaction");
 const dialogVoice = document.querySelector("#dialog-voice");
 const dialogDescription = document.querySelector("#dialog-description");
 const dialogTags = document.querySelector("#dialog-tags");
 const dialogFeatures = document.querySelector("#dialog-features");
+const dialogFeaturesTitle = document.querySelector("#dialog-features-title");
 const dialogFeatureList = document.querySelector("#dialog-feature-list");
 const dialogActions = document.querySelector("#dialog-actions");
 
 let activeCategory = "全部";
 let revealObserver;
 const touchMotionObservers = new WeakMap();
+let activeDialogCharacterId = "";
+const showcaseModeSelections = new Map();
 
 const themeStorageKey = "character-archive-theme";
 const themeSequence = ["auto", "light", "dark"];
@@ -505,26 +562,7 @@ function renderScrollArchive(items) {
           </div>
 
           <div class="showcase-copy-stack">
-            ${items.map((character, index) => {
-              const primaryLink = character.links?.[0];
-              return `
-                <article class="showcase-copy ${index === 0 ? "is-active" : ""}" data-showcase-copy style="--focus:${index === 0 ? 1 : 0};--copy-x:${index === 0 ? 0 : 28}px" aria-hidden="${index === 0 ? "false" : "true"}" ${index === 0 ? "" : "inert"}>
-                  <p class="showcase-file">FILE ${String(index + 1).padStart(2, "0")} / ${escapeHtml(character.category)}</p>
-                  <h3>${escapeHtml(character.name)}</h3>
-                  <p class="showcase-role">${escapeHtml(character.role)}</p>
-                  ${character.voice ? `<blockquote>「${escapeHtml(character.voice)}」</blockquote>` : ""}
-                  <dl class="showcase-facts">
-                    <div><dt>AGE</dt><dd>${escapeHtml(character.age)}</dd></div>
-                    <div><dt>HEIGHT</dt><dd>${escapeHtml(character.height)}</dd></div>
-                    <div><dt>OCCUPATION</dt><dd>${escapeHtml(character.occupation)}</dd></div>
-                  </dl>
-                  <div class="showcase-actions">
-                    <button type="button" data-character-id="${character.id}">查看資料 ${icons.arrowRight}</button>
-                    ${primaryLink ? `<a href="${escapeHtml(primaryLink.url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(primaryLink.label)}，在新分頁開啟">${escapeHtml(primaryLink.shortLabel || primaryLink.label)} ${icons.external}</a>` : ""}
-                  </div>
-                </article>
-              `;
-            }).join("")}
+            ${items.map((character, index) => renderShowcaseCopy(character, index, index === 0)).join("")}
           </div>
         </div>
 
@@ -538,6 +576,119 @@ function renderScrollArchive(items) {
 
   selectShowcase(0, false);
   bindMotionVideos(scrollArchive);
+}
+
+function getShowcaseModeId(character) {
+  if (!character?.modes?.length) return "";
+  const savedModeId = showcaseModeSelections.get(character.id);
+  return character.modes.some((mode) => mode.id === savedModeId)
+    ? savedModeId
+    : character.modes[0].id;
+}
+
+function renderShowcaseModeSwitch(character, activeModeId) {
+  if (!character.modes?.length || character.modes.length < 2) return "";
+
+  return `
+    <div class="showcase-mode-switch" aria-label="${escapeHtml(character.name)}首頁版本">
+      ${character.modes.map((mode) => `
+        <button
+          class="showcase-mode-button ${mode.id === activeModeId ? "is-active" : ""}"
+          type="button"
+          data-showcase-mode="${escapeHtml(mode.id)}"
+          data-showcase-mode-character="${escapeHtml(character.id)}"
+          aria-pressed="${mode.id === activeModeId ? "true" : "false"}"
+        >${escapeHtml(mode.label)}</button>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderShowcasePlatformPicker(links = []) {
+  if (links.length < 2) return "";
+
+  const platformItems = links.map((link) => {
+    if (link.status === "coming-soon") {
+      return `
+        <span class="showcase-platform-item is-upcoming" aria-disabled="true">
+          <span>${escapeHtml(link.label.replace(" · 故事互動", ""))}</span>
+          <small>即將公開</small>
+        </span>
+      `;
+    }
+
+    return `
+      <a
+        class="showcase-platform-item"
+        href="${escapeHtml(link.url)}"
+        ${link.external ? 'target="_blank" rel="noopener noreferrer"' : ""}
+        aria-label="${escapeHtml(link.label)}，在新分頁開啟"
+      >
+        <span>${escapeHtml(link.label.replace(" · 故事互動", ""))}</span>
+        <small>進入 ${icons.external}</small>
+      </a>
+    `;
+  }).join("");
+
+  return `
+    <details class="showcase-platform-picker">
+      <summary>選擇平台</summary>
+      <div class="showcase-platform-menu" aria-label="故事互動平台">
+        ${platformItems}
+      </div>
+    </details>
+  `;
+}
+
+function renderShowcaseCopy(character, index, isActive) {
+  const activeModeId = getShowcaseModeId(character);
+  const profile = resolveCharacterMode(character, activeModeId);
+  const primaryLink = profile.links?.find((link) => link.url && link.status !== "coming-soon");
+  const hasPlatformChoice = (profile.links?.length || 0) > 1;
+
+  return `
+    <article
+      class="showcase-copy ${isActive ? "is-active" : ""}"
+      data-showcase-copy
+      data-showcase-character="${escapeHtml(character.id)}"
+      style="--focus:${isActive ? 1 : 0};--copy-x:${isActive ? 0 : 28}px;--character-accent:${character.accent}"
+      aria-hidden="${isActive ? "false" : "true"}"
+      ${isActive ? "" : "inert"}
+    >
+      <p class="showcase-file">FILE ${String(index + 1).padStart(2, "0")} / ${escapeHtml(profile.category)}</p>
+      <h3>${escapeHtml(profile.name)}</h3>
+      <p class="showcase-role">${escapeHtml(profile.role)}</p>
+      ${renderShowcaseModeSwitch(character, activeModeId)}
+      ${profile.voice ? `<blockquote>「${escapeHtml(profile.voice)}」</blockquote>` : ""}
+      <dl class="showcase-facts">
+        <div><dt>AGE</dt><dd>${escapeHtml(profile.age)}</dd></div>
+        <div><dt>HEIGHT</dt><dd>${escapeHtml(profile.height)}</dd></div>
+        <div><dt>OCCUPATION</dt><dd>${escapeHtml(profile.occupation)}</dd></div>
+      </dl>
+      <div class="showcase-actions">
+        <button type="button" data-character-id="${escapeHtml(character.id)}" data-character-mode="${escapeHtml(activeModeId)}">查看資料 ${icons.arrowRight}</button>
+        ${hasPlatformChoice
+          ? renderShowcasePlatformPicker(profile.links)
+          : primaryLink
+            ? `<a href="${escapeHtml(primaryLink.url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(primaryLink.label)}，在新分頁開啟">${escapeHtml(primaryLink.shortLabel || primaryLink.label)} ${icons.external}</a>`
+            : ""}
+      </div>
+    </article>
+  `;
+}
+
+function selectShowcaseMode(characterId, modeId) {
+  const character = characters.find((item) => item.id === characterId);
+  if (!character?.modes?.some((mode) => mode.id === modeId)) return;
+
+  showcaseModeSelections.set(characterId, modeId);
+  const copies = [...scrollArchive.querySelectorAll("[data-showcase-copy]")];
+  const currentCopy = copies.find((copy) => copy.dataset.showcaseCharacter === characterId);
+  if (!currentCopy) return;
+
+  const index = copies.indexOf(currentCopy);
+  const isActive = currentCopy.classList.contains("is-active");
+  currentCopy.outerHTML = renderShowcaseCopy(character, index, isActive);
 }
 
 function selectShowcase(nextIndex, animate = true) {
@@ -616,19 +767,35 @@ function renderDialogLinks(links = []) {
   }
 
   dialogActions.hidden = false;
-  dialogActions.innerHTML = links.map((link, index) => `
-    <a
-      class="dialog-link ${index > 0 ? "is-secondary" : ""}"
-      href="${escapeHtml(link.url)}"
-      ${link.external ? 'target="_blank" rel="noopener noreferrer"' : ""}
-    >
-      ${escapeHtml(link.label)}
-      ${link.external ? icons.external : icons.arrowRight}
-    </a>
-  `).join("");
+  const linkItems = links.map((link) => {
+    if (link.status === "coming-soon") {
+      return `
+        <span class="dialog-link is-upcoming" aria-disabled="true">
+          <span class="dialog-link-main">${escapeHtml(link.label)}</span>
+          <span class="dialog-link-status">即將公開</span>
+        </span>
+      `;
+    }
+
+    return `
+      <a
+        class="dialog-link"
+        href="${escapeHtml(link.url)}"
+        ${link.external ? 'target="_blank" rel="noopener noreferrer"' : ""}
+      >
+        <span class="dialog-link-main">${escapeHtml(link.label)}</span>
+        ${link.external ? icons.external : icons.arrowRight}
+      </a>
+    `;
+  }).join("");
+
+  dialogActions.innerHTML = `
+    <p class="dialog-actions-title">互動入口</p>
+    <div class="dialog-platform-list">${linkItems}</div>
+  `;
 }
 
-function renderDialogFeatures(features = []) {
+function renderDialogFeatures(features = [], title = "主要功能") {
   if (!features.length) {
     dialogFeatures.hidden = true;
     dialogFeatureList.innerHTML = "";
@@ -636,14 +803,77 @@ function renderDialogFeatures(features = []) {
   }
 
   dialogFeatures.hidden = false;
+  dialogFeaturesTitle.textContent = title;
   dialogFeatureList.innerHTML = features
     .map((feature) => `<li>${escapeHtml(feature)}</li>`)
     .join("");
 }
 
-function openCharacter(characterId) {
+function resolveCharacterMode(character, modeId) {
+  const selectedMode = character.modes?.find((mode) => mode.id === modeId);
+  return selectedMode ? { ...character, ...selectedMode } : character;
+}
+
+function renderDialogModeSwitch(character, activeModeId) {
+  if (!character.modes?.length || character.modes.length < 2) {
+    dialogModeSwitch.hidden = true;
+    dialogModeSwitch.innerHTML = "";
+    return;
+  }
+
+  dialogModeSwitch.hidden = false;
+  dialogModeSwitch.innerHTML = character.modes.map((mode) => `
+    <button
+      type="button"
+      class="dialog-mode-button ${mode.id === activeModeId ? "is-active" : ""}"
+      data-dialog-mode="${escapeHtml(mode.id)}"
+      aria-pressed="${mode.id === activeModeId ? "true" : "false"}"
+    >${escapeHtml(mode.label)}</button>
+  `).join("");
+}
+
+function renderCharacterDialog(character, modeId) {
+  const profile = resolveCharacterMode(character, modeId);
+
+  dialogCategory.textContent = profile.category;
+  dialogName.textContent = profile.name;
+  dialogRole.textContent = profile.role;
+  dialogAge.textContent = profile.age;
+  dialogHeight.textContent = profile.height;
+  dialogOccupation.textContent = profile.occupation;
+  dialogProfileType.textContent = profile.profileType;
+  dialogBackgroundTitle.textContent = profile.backgroundTitle || "角色背景";
+  dialogBackground.textContent = profile.background;
+  dialogInteractionTitle.textContent = profile.interactionTitle || "互動定位";
+  dialogInteraction.textContent = profile.interaction;
+
+  if (profile.voice) {
+    dialogVoice.hidden = false;
+    dialogVoice.textContent = `「${profile.voice}」`;
+  } else {
+    dialogVoice.hidden = true;
+    dialogVoice.textContent = "";
+  }
+
+  dialogDescription.textContent = profile.description;
+  dialogTags.setAttribute("aria-label", profile.tagsLabel || "功能標籤");
+  dialogTags.innerHTML = profile.tags
+    .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
+    .join("");
+
+  renderDialogFeatures(profile.features, profile.featuresTitle);
+  renderDialogLinks(profile.links);
+  renderDialogModeSwitch(character, modeId);
+}
+
+function openCharacter(characterId, modeId = "") {
   const character = characters.find((item) => item.id === characterId);
   if (!character) return;
+
+  activeDialogCharacterId = characterId;
+  const initialModeId = character.modes?.some((mode) => mode.id === modeId)
+    ? modeId
+    : character.modes?.[0]?.id || "";
 
   dialog.style.setProperty("--dialog-tone-a", character.tones[0]);
   dialog.style.setProperty("--dialog-tone-b", character.tones[1]);
@@ -654,31 +884,7 @@ function openCharacter(characterId) {
   dialogImage.alt = character.imageAlt;
   dialogImage.style.objectPosition = character.dialogPosition || character.cardPosition || "50% 50%";
 
-  dialogCategory.textContent = character.category;
-  dialogName.textContent = character.name;
-  dialogRole.textContent = character.role;
-  dialogAge.textContent = character.age;
-  dialogHeight.textContent = character.height;
-  dialogOccupation.textContent = character.occupation;
-  dialogProfileType.textContent = character.profileType;
-  dialogBackground.textContent = character.background;
-  dialogInteraction.textContent = character.interaction;
-
-  if (character.voice) {
-    dialogVoice.hidden = false;
-    dialogVoice.textContent = `「${character.voice}」`;
-  } else {
-    dialogVoice.hidden = true;
-    dialogVoice.textContent = "";
-  }
-
-  dialogDescription.textContent = character.description;
-  dialogTags.innerHTML = character.tags
-    .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
-    .join("");
-
-  renderDialogFeatures(character.features);
-  renderDialogLinks(character.links);
+  renderCharacterDialog(character, initialModeId);
   dialog.showModal();
   dialogName.tabIndex = -1;
   dialogName.focus({ preventScroll: true });
@@ -855,10 +1061,17 @@ grid.addEventListener("click", (event) => {
 
   const trigger = event.target.closest("[data-character-id]");
   if (!trigger) return;
-  openCharacter(trigger.dataset.characterId);
+  const character = characters.find((item) => item.id === trigger.dataset.characterId);
+  openCharacter(trigger.dataset.characterId, trigger.dataset.characterMode || getShowcaseModeId(character));
 });
 
 scrollArchive.addEventListener("click", (event) => {
+  const modeTrigger = event.target.closest("[data-showcase-mode]");
+  if (modeTrigger) {
+    selectShowcaseMode(modeTrigger.dataset.showcaseModeCharacter, modeTrigger.dataset.showcaseMode);
+    return;
+  }
+
   const jump = event.target.closest("[data-showcase-jump]");
   if (jump) {
     selectShowcase(Number(jump.dataset.showcaseJump));
@@ -867,11 +1080,20 @@ scrollArchive.addEventListener("click", (event) => {
 
   const trigger = event.target.closest("[data-character-id]");
   if (!trigger) return;
-  openCharacter(trigger.dataset.characterId);
+  const character = characters.find((item) => item.id === trigger.dataset.characterId);
+  openCharacter(trigger.dataset.characterId, trigger.dataset.characterMode || getShowcaseModeId(character));
 });
 
 searchInput.addEventListener("input", renderCharacters);
 dialogClose.addEventListener("click", () => dialog.close());
+dialogModeSwitch.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-dialog-mode]");
+  if (!trigger) return;
+
+  const character = characters.find((item) => item.id === activeDialogCharacterId);
+  if (!character) return;
+  renderCharacterDialog(character, trigger.dataset.dialogMode);
+});
 
 themeToggle?.addEventListener("click", () => {
   const currentPreference = document.documentElement.dataset.themePreference || "auto";
