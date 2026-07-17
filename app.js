@@ -93,18 +93,18 @@ const characters = [
     height: "179 cm",
     occupation: "出版社設計部美編實習生",
     profileType: "設計型角色",
-    personality: ["敏銳", "務實", "嘴硬", "細緻", "有耐心"],
-    voice: "……每次都說是 final。說吧，又要改哪？",
-    description: "解析參考圖、整理 PixAI Prompt，並協助維持角色形象與生成結果的一致性。",
-    background: "黎野是出版社設計部的美編實習生，白天處理角色形象、書封與社群視覺，晚上則和各種永遠不會 final 的修改共處。他熟悉 PixAI 的 XL、SDXL 與 DiT 模型，習慣先拆解參考圖，再把人物、場景、光線、鏡頭與參數整理成可重複使用的視覺系統。",
-    interaction: "把參考圖、角色設定或生成失敗的圖片交給他。他會先確認模型與比例，解析人物和畫面結構，再提供 Prompt、Negative Prompt、LoRA 與參數建議，或針對真正出問題的部分進行診斷。",
-    tags: ["PixAI Prompt", "參考圖解析", "角色一致性", "生成診斷"],
+    personality: ["敏銳", "務實", "嘴硬", "精準", "善於收尾"],
+    voice: "⋯⋯每次都說是 final⋯說吧⋯又要改哪？",
+    description: "拆解參考圖，為 PixAI、Niji 7 與 ChatGPT Images 編寫精準 Prompt，並診斷生成偏差。",
+    background: "黎野是出版社設計部的美編實習生，負責角色形象、書封與社群視覺，也長期和各種永遠不會 final 的修改共處。他不迷信萬用公式，而是拆解參考圖、釐清控制來源，將成功結果整理成可重複測試的視覺資產。嘴上嫌麻煩，實際總會把最後一版收乾淨。",
+    interaction: "把參考圖、角色設定或生成失敗的圖片交給他，並告訴他使用平台與尺寸。他能在 PixAI、Niji 7、ChatGPT Images 之間選擇合適語法，提供 Prompt、編修指令、參數建議與局部診斷，協助維持角色一致性。",
+    tags: ["參考圖拆解", "多平台 Prompt", "角色一致性", "生成診斷"],
     features: [
-      "解析人物特徵、畫風、構圖、光線與保留元素",
-      "依 XL、SDXL 或 DiT 重整 Prompt 與 Negative Prompt",
-      "建議 LoRA、權重、Seed、Steps、CFG 與 Sampler",
-      "建立固定人設、視覺 DNA、場景、動作與表情模組",
-      "診斷生成結果，區分不像與不好看並局部修正"
+      "拆解人物、畫風、構圖、鏡頭、光線與控制來源",
+      "編寫 PixAI、SDXL、DiT 與 Tsubaki.2 Prompt",
+      "編寫 Niji 7 與 ChatGPT Images 的生成及編修指令",
+      "診斷模型、參數、LoRA、參考圖與控制衝突",
+      "建立固定人設、視覺 DNA、Prompt 與生成紀錄"
     ],
     status: "",
     image: "assets/images/lynn.webp?v=20260717-motion-set",
@@ -188,6 +188,7 @@ const dialogActions = document.querySelector("#dialog-actions");
 
 let activeCategory = "全部";
 let revealObserver;
+const touchMotionObservers = new WeakMap();
 
 const themeStorageKey = "character-archive-theme";
 const themeSequence = ["auto", "light", "dark"];
@@ -583,9 +584,28 @@ function selectShowcase(nextIndex, animate = true) {
   if (progressBar) progressBar.style.transform = `scaleX(${progress.toFixed(3)})`;
   if (activeName) activeName.textContent = characters.find((item) => item.id === portraits[activeIndex]?.dataset.characterId)?.name || "";
 
+  syncTouchMotionVideos();
+
   if (animate && direction !== 0) {
     window.setTimeout(() => scene.classList.remove("is-switching"), 520);
   }
+}
+
+function syncTouchMotionVideos() {
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (canHover || reduceMotion) return;
+
+  document.querySelectorAll(".showcase-portrait, .card-portrait").forEach((host) => {
+    const rect = host.getBoundingClientRect();
+    const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+    const visibleRatio = rect.height > 0 ? visibleHeight / rect.height : 0;
+    const isShowcase = host.matches(".showcase-portrait");
+    const isCurrent = !isShowcase || host.classList.contains("is-active");
+    const shouldPlay = visibleRatio >= 0.6 && isCurrent && !document.hidden;
+    if (shouldPlay) playMotionVideo(host);
+    else pauseMotionVideo(host, false);
+  });
 }
 
 function renderDialogLinks(links = []) {
@@ -697,12 +717,16 @@ function playMotionVideo(host) {
   video.muted = true;
   const playRequest = video.play();
   if (playRequest && typeof playRequest.catch === "function") {
-    playRequest.catch(() => host.classList.remove("is-video-playing"));
+    playRequest
+      .then(() => host.classList.add("is-video-playing"))
+      .catch(() => host.classList.remove("is-video-playing"));
   }
 }
 
 function bindMotionVideos(scope) {
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  touchMotionObservers.get(scope)?.disconnect();
 
   scope.querySelectorAll("[data-motion-video]").forEach((video) => {
     const host = video.closest(".showcase-portrait, .card-portrait");
@@ -721,6 +745,25 @@ function bindMotionVideos(scope) {
       focusTarget.addEventListener("blur", () => pauseMotionVideo(host));
     }
   });
+
+  if (!canHover && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const host = entry.target;
+        const isShowcase = host.matches(".showcase-portrait");
+        const isCurrent = !isShowcase || host.classList.contains("is-active");
+
+        if (entry.isIntersecting && isCurrent && !document.hidden) {
+          playMotionVideo(host);
+        } else {
+          pauseMotionVideo(host, false);
+        }
+      });
+    }, { threshold: 0.6 });
+
+    scope.querySelectorAll(".showcase-portrait, .card-portrait").forEach((host) => observer.observe(host));
+    touchMotionObservers.set(scope, observer);
+  }
 }
 
 function bindCardInteractions() {
@@ -855,6 +898,15 @@ dialog.addEventListener("click", (event) => {
 if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
   window.addEventListener("pointermove", updatePointerGlow, { passive: true });
 }
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    document.querySelectorAll(".showcase-portrait, .card-portrait").forEach((host) => pauseMotionVideo(host, false));
+    return;
+  }
+
+  syncTouchMotionVideos();
+});
 
 document.querySelectorAll(".hero, .section-heading, .filter-row, .about-section").forEach((element, index) => {
   element.dataset.reveal = "";
