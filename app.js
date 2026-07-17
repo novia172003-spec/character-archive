@@ -23,7 +23,7 @@ const characters = [
       "另製作大綱、摘要、關係演進與完整存檔"
     ],
     status: "",
-    image: "assets/images/mem-00.webp?v=20260717-motion-pair",
+    image: "assets/images/mem-00.webp?v=20260717-mem-static-2",
     motionVideo: "assets/video/mem-00-hover.mp4?v=20260717-motion-pair",
     imageAlt: "銀白髮的 [ MEM-00 ] 側臉仰望，身穿白色科技感高領服裝，周圍浮動透明介面。",
     cardPosition: "50% 30%",
