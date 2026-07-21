@@ -158,7 +158,8 @@ const characters = [
           },
           {
             label: "Heartbeat · 故事互動",
-            status: "coming-soon"
+            url: "https://heartbeat-app.net/characters/6cbd0cc1-d5da-43df-90af-3a17235a28fa",
+            external: true
           },
           {
             label: "ChatGPT · 故事互動",
